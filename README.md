@@ -10,6 +10,13 @@ The implementation of this specification will be done Python 2.7.x, migration to
 Example for setting beam size:
 ```
 def set_beam_size(vertical_size: float, horizontal_size: size) -> None:
+"""
+Sets the beam size.
+
+:param float vertical_size: The vertical beamsize in microns
+:param float horizontal_size: The horizontal beamsize in microns
+:returns: None
+"""
 ```
 A basic framework that provides access to the underlying control layer and for sending asynchronous data is assumed to exist, if needed. The control layer is accessed through a object called __"beamline"__ the mechanism for sending asynchronous data is referred to as __"async.emit"__.
 
