@@ -9,7 +9,7 @@ The implementation of this specification will be done Python 2.7.x, migration to
 
 Example for setting beam size:
 ```
-def set_beam_size(vertical_size: float, horizontal_size: size) -> None:
+def set_beam_size(vertical_size: float, horizontal_size: float) -> None:
 """
 Sets the beam size.
 
