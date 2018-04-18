@@ -79,6 +79,7 @@ corresponding signal name
 
 
 **API Functions**
+
 These are the functions that make up the sample changer API
 
 .. code:: python
