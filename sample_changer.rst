@@ -204,7 +204,8 @@ These are the functions that make up the sample changer API
 
     def unmount_sample(location:LocationStr) -> bool:
     """
-    Un-mounts mounted sample to location
+    Un-mounts mounted sample to location, un mounts the sample
+    to where it was last mounted from if nothing is passed
 
     :param LocationStr location: location
     :returns: True if un-mount successful otherwise False
