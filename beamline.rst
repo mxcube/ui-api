@@ -10,9 +10,12 @@ not necessarily belong to one particular instrument.
 
 .. code:: python
 
-   class CmdTuple(NamedTuple):
+   class ProcedureData(NamedTuple):
     """
-    Describes a "generic" beamline procedure, where:
+    Describes a "generic" beamline procedure, procedures that are not
+    necassarily present on all beamlines.
+
+    where:
 
     cmd_id: the string identifying the command, i.e. 'QUICK_REALIGN'
     running: True if the procedure is running otherwise False
@@ -29,12 +32,12 @@ not necessarily belong to one particular instrument.
         messages: list
 
 
-    def get_procedures() -> List[CmdTuple]:
+    def get_procedures() -> List[ProcedureData]:
     """
     :returns: a list of tuples each describing a beamline procedure,
               such as: realignment, anneal
 
-    :rtype: List[CmdTuple]
+    :rtype: List[ProcedureData]
     """
         pass
 
@@ -46,7 +49,7 @@ not necessarily belong to one particular instrument.
     (Errors and progress that occurs is passed asynchronously via the
      available signaling mechanism.)
     """
-        
+        pass    
     
     def stop_procedure(cmd_id:str) -> bool:
     """
@@ -54,9 +57,9 @@ not necessarily belong to one particular instrument.
 
     (Signal emitted if stopped or on timeout waiting for procedure to stop)
     """
+        pass
 
-
-    class Actuator(NamedTuple):
+    class ActuatorData(NamedTuple):
     """
     Describes an actuator commonly a motor, that is considered to be
     "globally" available on the beamline. Such actuators could be shutters
@@ -68,33 +71,34 @@ not necessarily belong to one particular instrument.
     msg: A message string, explaining state or value
     state: The state of the actuator defined by ActuatorState
            (MOVING, READY, ERROR ...)
+    limit: list of limits
     """
 
         name: str
         value: float
         msg: str
         state: ActuatorState
+        limit: [float, float]
 
 
-
-    def get_actuators() -> Dict[str, Actuator]:
+    def get_actuators() -> Dict[str, ActuatorData]:
     """
     :returns: A dictionary with all available actuators where the key
-              is the actuator name and the value the Actuator tuple
+              is the actuator name and the value the ActuatorData tuple
     :rtype dict:            
     """
         pass
 
 
-    def get_actuator(name) -> Actuator:
+    def get_actuator(name) -> ActuatorData:
     """
-    :returns: The Actuator object identified by the given name
-    :rtype: Actuator
+    :returns: The ActuatorData object identified by the given name
+    :rtype: ActuatorData
     """
        pass
 
 
-    def set_actuator(name, value) -> bool:
+    def set_actuator_value(name, value:Any) -> bool:
     """
     Tries to move the actuator identified by name to value
 
@@ -103,9 +107,10 @@ not necessarily belong to one particular instrument.
     
     :returns: True if motion was started False otherwise
     """
+        pass
 
 
-    class BeamInfo(NamedTuple):
+    class BeamInfoData(NamedTuple):
     """
     Describes the beam
 
@@ -123,7 +128,19 @@ not necessarily belong to one particular instrument.
         available_beam_sizes: list
     
 
-    def get_beam_info() -> BeamInfo:
+    def get_beam_info() -> BeamInfoData:
+    """
+    :returns: Information regarding the beam
+    :rtype: BeamInfoData
+    """
+        pass
+
+
+    def get_beam_size() -> tuple(float, float):
+    """
+    :returns: Beam size as a tuple, (vertical size, horizontal size)
+    :rtype: tuple(float, float)
+    """
         pass
 
 
@@ -167,28 +184,28 @@ be handled separately (should be documented with the corresponding procedure or 
 
 .. code:: python
 
-   def procedure_sate_changed_handler(CmdTuple) -> None:
+   def procedure_sate_changed_handler(ProcedureData) -> None:
    """
    Triggered when a procedure changes state
    """
    pass
 
    
-   def procedure_value_changed_handler(CmdTuple) -> None:
+   def procedure_value_changed_handler(ProcedureData) -> None:
    """
    Triggered when a procedure changes value, i.e. progress
    """
    pass
 
 
-   def actuator_sate_changed_handler(CmdTuple) -> None:
+   def actuator_sate_changed_handler(ActuatorData) -> None:
    """
    Triggered when an actuator changes state
    """
    pass
 
    
-   def actuator_value_changed_handler(CmdTuple) -> None:
+   def actuator_value_changed_handler(ActuatorData) -> None:
    """
    Triggered when an actuator changes value, i.e. movement
    """
