@@ -25,17 +25,15 @@ Procedures
 
         name: the string identifying the command, i.e. 'QUICK_REALIGN'
         state: CmdState
-        args: tuple of arguments to pass to the procedure
-        kwargs: dict[str:Any] of keyword arguments with their defaults
-        display_name: the name to display in the user interface i.e. "Quick Realign"
+        kwargs: OrderdDict[str:Any] of arguments with their defaults
+        display_name: the name to display in the user interface e.g. "Quick Realign"
         tool_tip: the tool tip
         messages: any initial messages to display
         """
 
         name: str   # NB This assumes that only one instance of a command can run at any time
         state: CmdState
-        args: tuple[str, ...]
-        kwargs: dict[str, Any]
+        kwargs: OrderedDict[str, Any]
         display_name: Optional[str] # defaults to name
         tool_tip: Optional[str]
         messages: Tuple[str]
@@ -51,17 +49,16 @@ Procedures
         pass
 
 
-    def get_procedure(name) -> ProcedureData:
+    def get_procedure(name:str) -> ProcedureData:
         """
         :returns: The ProcedureData object identified by the given name
         """
         pass
 
 
-    def run_procedure(name:str, *args, **kwargs) -> bool:
+    def run_procedure(name:str, **kwargs) -> bool:
         """
-        Runs procedure identified by name with mandatory arguments args
-        and optional keyword arguments kwargs
+        Runs procedure identified by name with arguments kwargs
 
         (Errors and progress that occurs is passed asynchronously via the
          available signalling mechanism.)
@@ -101,14 +98,13 @@ Actuators:
     from typing import *
     from enum import Enum
 
-    class GenericActuatorData(NamedTuple):
+    class ActuatorData(NamedTuple):
         """
-        GenericActuatorData (as given here) is an abstract superclass - as it were.
-        In practice we would need separate classes that differ in using
-        different actual type specifications instead of the generic TYP.
-
-        Supported TYP are: float, Tuple[float, float], str, and Enum.
-        More could be added at need.
+        ActuatorData pass configuration, state and value for an Actuator.
+        The type of value, uppper_limit, lower_limit, and allowed_values
+        depends on the specific actuator. For now, supported types are:
+        float, Tuple[float, float], str, and Enum,
+        but more could be added at need.
 
         Using the same structure to deal with continuous-value and enumerated
         floats, as well as settable and frozen attributes, allows you to use
@@ -119,18 +115,18 @@ Actuators:
         #    to support the pair-of-floats type.
 
         # NB allowed_values, if not empty, gives the allowed values.
-        #    For TYP==float a set_value must default to the closest value in
+        #    For type float a set_value must default to the closest value in
         #    the allowed_values.
         # In all other cases setting a disallowed value should throw ValueError.
         """
 
         name:str            # A globally unique name that identifies the actuator
-        value:Optional[TYP] # The current position - could be None is some states.
+        value               # The current position - could be None is some states.
         msg:Optional[str]   # A message string, explaining state or value
         state:ActuatorState # The state of the actuator
-        upper_limit:Optional[TYP]   # Upper limit
-        lower_limit:Optional[TYP]   # Lower limit
-        allowed_values:Tuple[TYP]   # Tuple of allowed values
+        upper_limit         # Upper limit
+        lower_limit         # Lower limit
+        allowed_values      # Tuple of allowed values
 
 
     def get_actuators() -> Dict[str, ActuatorData]:
@@ -141,14 +137,14 @@ Actuators:
         pass
 
 
-    def get_actuator(name) -> ActuatorData:
+    def get_actuator(name:atr) -> ActuatorData:
         """
         :returns: The ActuatorData object identified by the given name
         """
         pass
 
 
-    def set_actuator_value(name, value:Any) -> bool:
+    def set_actuator_value(name:str, value:Any) -> bool:
         """
         Tries to set the actuator identified by name to value.
         Setting a disallowed value will raise ValueError, with one exception:
