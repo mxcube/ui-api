@@ -35,11 +35,11 @@ value = get_actuator('detector_distance').value
         Omega, Kappa, Phi, AlignmentX,  AlignmentY,  AlignmentZ,
         CentringX, CentringY, CentringZ,  Focus
 
-        # NB the capitalized case is to distinguish them from the current
-             lower-case names ('Phi' matches 'kappa_phi', not 'phi')
+        # NB the capitalized case is to distinguish them from the current lower-case names
+             ('Phi' matches 'kappa_phi', not 'phi')
 
-        # NB There are too many motor names here, and maybe we should shorten
-             the list. It should be OK, though if the same motor is pointed to
+        # NB There are too many motor names here, and maybe we should shorten the list.
+             It should be OK, though if the same motor is pointed to
              by two different names. The problems is how the names match.
              If you do not have 'CentringZ', which motor should you use during
              centring?
@@ -55,8 +55,8 @@ value = get_actuator('detector_distance').value
         but the others should be defined, so we have agreed names for the
         cases they are needed.
 
-        # NB horizontal and vertical are kept separate, in case some beamlines
-             have one without the other.
+        # NB horizontal and vertical are kept separate,
+             in case some beamlines have one without the other.
 
     *Beamline parameters*
 
@@ -70,7 +70,8 @@ value = get_actuator('detector_distance').value
 
         The IN/OUT switching is covered below.
 
-        # NB are these continuous-value floats, or rather allowed_values, or on/off?
+        # NB are these continuous-value floats,
+             or rather allowed_values, or on/off?
 
 
 **Actuators - Type Tuple[float, float]:**
@@ -124,7 +125,7 @@ value = get_actuator('detector_distance').value
 
     - beam_divergence:Tuple[float,float]
 
-    This is extending the consept of 'actuator' a bit.
+    This is extending the concept of 'actuator' a bit.
 
     These are in practice unsettable by the UI, but they will be displayed,
     their values will be accessed and updated with value_changed signals,
