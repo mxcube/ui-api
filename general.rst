@@ -29,6 +29,7 @@ Procedures
         display_name: the name to display in the user interface e.g. "Quick Realign"
         tool_tip: the tool tip
         messages: any initial messages to display
+        category: Classification of procedures into types, for UI, e.g. 'Action', 'Query', ...  Optional
         """
 
         name: str   # NB This assumes that only one instance of a command can run at any time
@@ -37,6 +38,7 @@ Procedures
         display_name: Optional[str] # defaults to name
         tool_tip: Optional[str]
         messages: Tuple[str]
+        category: Optional[str]
 
 
     def get_procedures() -> OrderedDict[str, ProcedureData]:
