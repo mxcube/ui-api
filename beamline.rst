@@ -62,7 +62,8 @@ value = get_actuator('detector_distance').value
 
         resolution, energy, wavelength, transmission
 
-        # NB energy/wavelength and resolution/detector_distance are both needed.
+        # NB energy/wavelength are both needed
+             as are resolution/detector_distance.
 
     *Light intensity*
 
