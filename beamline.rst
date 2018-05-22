@@ -20,8 +20,8 @@ energy and resolution.
 
     *Centring motors*
 
-        omega, kappa, kappa-phi, alignment-ver, alignment-hor, alignment-depth,
-        centring-ver, centring-hor, centring-depth, focus
+        omega, kappa, kappa_phi, alignment_ver, alignment_hor, alignment_depth,
+        centring_vertical, centring_horizontal, centring_depth, focus
 
     *Detector motors*
 
