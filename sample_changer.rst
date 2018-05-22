@@ -9,8 +9,9 @@ These are the functions that make up the sample changer API
 
 .. code:: python
 
-    from sample_changer.GenericSampleChanger import (SampleChangerState, Sample)
     from typing import NewType
+    from sample_changer.GenericSampleChanger import (SampleChangerState, Sample)
+    from dstruct import (ActuatorData, ProcedureData)
 
     # Mostly to facilitate documentation (to avoid repetition) but could also
     # be used in actual code.
@@ -20,6 +21,7 @@ These are the functions that make up the sample changer API
     #
     LocationStr = NewType('LocationStr', str)
 
+
     class SampleNode(NamedTuple):
     """
     Represents a sample in a hierarchical layout that corresponds to the
@@ -27,43 +29,32 @@ These are the functions that make up the sample changer API
 
     Where state is one of the samples given by: SampleChangerState.tostring()
     """
-        name: str
-        state: str
-        id: str
-        selected: bool
-        children: SampleNode
-
-
-    class SampleTuple(NamedTuple):
-    """
-    Represents a sample in the sample list, a flat representation of all samples
-
-    Where state is one of the samples given by: SampleChangerState.tostring()
-    """
         id: str
         name: str
         location: LocationStr
         code: str
+        selected: bool
         lodable: bool
-        state: str
+        children: SampleNode
 
 
-    def to_sample_tuple(s: Sample) -> \
-        SampleTuple[str, str, str, str, bool, str]:
+    def to_sample_node(s: Sample) -> \
+        SampleNode[str, str, LocationStr, str, bool, bool, None]:
     """
-    Example using existing GenericSampleChanger to create a SampleTuple
+    Example using existing GenericSampleChanger to create a SampleNode
     """
-    return SampleTuple(s.getAddress(),
+    return SampleNode(s.getAddress(),
                        s.getAddress(), "Sample-%s" % s.getAddress(),
                        s.getID(),
                        True,
-                       SampleChangerState.tostring(s.getState()))
+                       SampleChangerState.tostring(s.getState())
+                       None)
 
 
-    def get_sample_list() -> List[SampleTuple]:
+    def get_sample_list() -> List[SampleNode]:
     """
     :returns: the sample changer content often refered to as the "sample list"
-    :rtype: List[SampleTuple]
+    :rtype: List[SampleNode]
     """
     pass
 
@@ -78,10 +69,10 @@ These are the functions that make up the sample changer API
     pass
 
 
-    def get_current_sample() -> SampleTuple:
+    def get_current_sample() -> SampleNode:
     """
-    :returns: the sample that is currenly loaded by the sample changer
-    :rtype: SampleTuple
+    :returns: the sample that is currently loaded by the sample changer
+    :rtype: SampleNode
     """
     pass
 
@@ -148,33 +139,47 @@ These are the functions that make up the sample changer API
     {'state': GenericSampleChanger.SampleChangerState
      'loaded_sample': LocationStr
      'contents': SampleNode
-     'procedures': "as returned by get_procedures",
+     'procedures': "as returned by get_available_commands"
      'msg': "user message if any"
     }
 
     :rtype: dict
     """
+    pass
 
-Specific procedures
--------------------
 
-There will be a number of procedures that are beamline-specific, or that use
-different parameters on different beamlines. These can be handled with the
-get_procedures, get_procedure, run_procedure, and stop_procedure functions
-(see the Procedures section under general for details). Procedures that
-are used in the same way on different beamlines should preferably be promoted
-to be part of the API, possibly with additional, beamline-specific parameters.
+    def get_available_commands() -> OrderedDict[str, ProcedureData]:
+    """
+    There is a number of procedures that are beamline-specific, or that use
+    different parameters on different beamlines.
 
-Possible example procedures are:
-home, abort, defreeze, reset_sample_number, change_gripper,
+    Possible example procedures are:
+    home, abort, defreeze, reset_sample_number, change_gripper,
+
+    :returns: OrderedDict[str, ProcedureData], of sample changer specific
+              commands
+    """
+    pass
+
+
+    def exec_command(name:str, **kargs) -> bool:
+    """
+    Executes the command cmd_name (one of the commands returned by
+    get_available_commands) with the args *args and **kwargs:
+
+    :returns: True on successful execution otherwise False
+    :rtype: bool
+    """
+    pass
+
 
 Signal handling
 ---------------
 
-Functions with the following signatures have to be provided by the specific UI Layer in order
-to handle the corresponding signals. These functions could simply be implemented in a file
-called for instance sc_signals.py or just signals.py and be attached automatically to the
-corresponding signal name
+Functions with the following signatures have to be provided by the specific UI
+Layer in order to handle the corresponding signals. These functions could simply
+be implemented in a file called for instance sc_signals.py or just signals.py
+and be attached automatically to the corresponding signal name
 
     +---------------------+---------------------------------+
     | Signal Name         | Handler                         |
@@ -188,7 +193,7 @@ corresponding signal name
     | cmdStateChanged     | sc_cmd_state_update_handler     |
     +---------------------+---------------------------------+
     | scError             | sc_error_handler                |
-    +---------------------+---------------------------------+`
+    +---------------------+---------------------------------+
 
 .. code:: python
 
@@ -217,7 +222,8 @@ corresponding signal name
    """
    Triggered when the states of one or more procedures have been updated
 
-   Note that get_procedures will get the entire set of procedures and their states
+   Note that get_procedures will get the entire set of procedures and
+   their states
    """
    pass
 
@@ -227,21 +233,3 @@ corresponding signal name
    Triggered on any error
    """
    pass
-
-**Usage example:**
-
-Its up to the layer using this API to handle any errors that occur during execution
-and perform the necessary actions, see the example of how it could be done in for instance
-MXCuBE3
-
-.. code:: python
-
-    @mxcube.route("/mxcube/api/v0.1/sample_changer/mount", methods=["POST"])
-    def mount_sample_clean_up():
-        try:
-            location = request.get_json()
-            common_ui_api.sample_changer.mount(location)
-        except Exception:
-            return Response(status=409)
-        else:
-            return Response(status=200)

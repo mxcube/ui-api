@@ -1,78 +1,42 @@
 Beamline API
 ============
 
-Functionality that incorporates several different instruments or
-that does not necessarily belong to one particular instrument.
+Functionality that are considered to belong to the beamlone as a whole,
+incorporating several different instruments or that does not necessarily belong
+to one particular instrument.
 
 
 List of Actuators:
 ------------------
 
-Below a list of all generic actuators across the UI (see general.rst),
-separated by data type.
-
-NB The actuators could be subdivided by component (beamline, diffractometer, etc.),
-but since the actuators can be accessed through the get_actuator(), get_actuators(),
-and set_actuator_value() top-level functions, there is no need to locate them
-within individual components. Component-specific access, such as
-
-detector.set_detector_distance(value)
-
-value = detector.get_detector_distance()
-
-could be added for convenience, but are basically superfluous,
-given that you can do
-
-set_actuator_value('detector_distance', value)
-
-value = get_actuator('detector_distance').value
+Below a list of actuators that, from an instrumentation perspective, are
+considered to belong to the beamline as a whole. Such actuators include, but
+are not limited to, actuators that have an effect on properties directly
+associated with the beamline. Such properties are for instance resolution,
+energy and resolution.
 
 
 **Actuators - Type float:**
 
     *Centring motors*
 
-        Omega, Kappa, Phi, AlignmentX,  AlignmentY,  AlignmentZ,
-        CentringX, CentringY, CentringZ,  Focus
-
-        # NB the capitalized case is to distinguish them from the current lower-case names
-             ('Phi' matches 'kappa_phi', not 'phi')
-
-        # NB There are too many motor names here, and maybe we should shorten the list.
-             It should be OK, though if the same motor is pointed to
-             by two different names. The problems is how the names match.
-             If you do not have 'CentringZ', which motor should you use during
-             centring?
-             Is 'Focus' always the same as 'AlignmentX'?
-             Does 'CentringZ' always match the same alignment motor
-             or does it depend on beamline geometry?
+        omega, kappa, kappa-phi, alignment-ver, alignment-hor, alignment-depth,
+        centring-ver, centring-hor, centring-depth, focus
 
     *Detector motors*
 
         detector_distance, two_theta, detector_horizontal, detector_vertical
 
-        detector_distance may be the only common one,
-        but the others should be defined, so we have agreed names for the
-        cases they are needed.
-
-        # NB horizontal and vertical are kept separate,
-             in case some beamlines have one without the other.
+        detector_distance may be the only common one, but the others are
+        defined for future needs.
 
     *Beamline parameters*
 
         resolution, energy, wavelength, transmission
 
-        # NB energy/wavelength are both needed
-             as are resolution/detector_distance.
-
     *Light intensity*
 
         frontlight_intensity, backlight_intensity
-
-        The IN/OUT switching is covered below.
-
-        # NB are these continuous-value floats,
-             or rather allowed_values, or on/off?
 
 
 **Actuators - Type Tuple[float, float]:**
@@ -81,11 +45,13 @@ value = get_actuator('detector_distance').value
 
         beam_size, beam_position
 
-        These should be generally supported
+    *Expert parameters (optional)*
 
-    *Expert parameters*
+        aperture, slits
 
-        aperture, slits, beam_definer
+        #
+        # Question: How exactly would these work ?
+        #
 
         These are included only to standardize the names. The specific
         beam-defining motors are likely to vary between beamlines,
@@ -104,6 +70,10 @@ value = get_actuator('detector_distance').value
         # NB we should standardise the vocabularies as well as the names.
              Enums?? How should we deal with beamline-specific sets?
 
+        # The underlaying "object" that provides the functionality could provide
+        # a suitable enum to go with the object ?
+
+
 **Actuators - Type TwoState**
 
     fast_shutter, safety_shutter, beamstop, capillary, frontlight, backlight
@@ -116,32 +86,92 @@ value = get_actuator('detector_distance').value
          It is open whether multistate objects (n> 2) should be handled similarly
          or should be done as TYP==str?
 
+    # A beamstop is traditionally in or out, if it has more states it have to be
+    # of another type
+
+
 **Immovable actuators**
 
     - machine_current:float
 
     - photon_flux:float
 
-    - fill_mode:str,
+    - fill_mode:str
 
     - beam_divergence:Tuple[float,float]
 
-    This is extending the concept of 'actuator' a bit.
 
-    These are in practice unsettable by the UI, but they will be displayed,
-    their values will be accessed and updated with value_changed signals,
-    and they will have some similar states.
-    (NOTINITIALIZED, UNUSABLE, FROZEN, possibly MOVING).
-    I think it makes sense to treat them as actuators anyway, also because
-    this is the way we want to treat normally settable actuators that are
-    fixed only on some specific beamline (e.g. wavelength on a non-tunable
-    beamline).
-
-
-BeamInfo:
----------
+API Functions
+-------------
 
 .. code:: python
+
+    from dstruct import (ActuatorData, ProcedureData)
+
+
+    def get_procedures() -> OrderedDict[str, ProcedureData]:
+        """
+        :returns: an OrderedDict name:ProcedureData, each describing a
+                  procedure, such as: realignment, anneal
+        """
+        pass
+
+
+    def get_procedure(name:str) -> ProcedureData:
+        """
+        :returns: The ProcedureData object identified by the given name
+        """
+        pass
+
+
+    def run_procedure(name:str, **kwargs) -> bool:
+        """
+        Runs procedure identified by name with arguments kwargs
+
+        (Errors and progress that occurs is passed asynchronously via the
+         available signaling mechanism.)
+        """
+        pass
+
+
+    def stop_procedure(name:str) -> bool:
+        """
+        Stops a running procedure identified by name
+
+        (Signal emitted if stopped or on timeout waiting for procedure to stop)
+        """
+        pass
+
+
+    def get_actuators() -> Dict[str, ActuatorData]:
+        """
+        :returns: A dictionary with all available actuators where the key
+                  is the actuator name and the value the ActuatorData tuple
+        """
+        pass
+
+
+    def get_actuator(name:atr) -> ActuatorData:
+        """
+        :returns: The ActuatorData object identified by the given name
+        """
+        pass
+
+
+    def set_actuator_value(name:str, value:Any) -> bool:
+        """
+        Tries to set the actuator identified by name to value.
+
+        Setting a disallowed value will raise ValueError.
+        Setting a value of the wrong type will raise TypeError
+
+        (Errors and progress of movement is passed asynchronously
+         via the available signaling mechanism)
+
+        :returns: True if motion was started False otherwise
+        """
+        pass
+
 
     class BeamInfoData(NamedTuple):
         """
@@ -168,9 +198,53 @@ BeamInfo:
         """
         pass
 
-    # NB This should be a procedure
+
     def prepare_beamline_for_sample():
         """
         Prepares the beamline for mounting a new sample
         """
+        pass
+
+
+Signal handlers:
+----------------
+
+    Functions with the following signatures have to be provided by the specific
+    UI Layer in order
+
+    to handle the various errors, state changes or simply progress messages that
+    are sent by the actions initiated by the functions above. These are the
+    generic signals that can be sent by a procedure or actuator, each of which
+    can have their own specific signals that have to be handled separately
+    (should be documented with the corresponding procedure or actuator)
+
+    +---------------------------+---------------------------------------+
+    | Signal Name               | Handler                               |
+    +===========================+=======================================+
+    | procedureStateChanged     | procedure_state_changed_handler       |
+    +---------------------------+---------------------------------------+
+    | procedureProgress         | procedure_progress_handler            |
+    +---------------------------+---------------------------------------+
+    | actuatorStateChanged      | actuator_state_changed                |
+    +---------------------------+---------------------------------------+
+    | actuatorValueChanged      | actuator_value_changed_handler        |
+    +---------------------------+---------------------------------------+
+
+.. code:: python
+
+    def procedure_state_changed_handler(ProcedureData) -> None:
+        """Triggered when a procedure changes state"""
+        pass
+
+    def procedure_progress_handler(procedure_name:str, value: Any,
+                                   message:str='') -> None:
+        """Handles progress-messages from running procedures"""
+        pass
+
+    def actuator_state_changed_handler(ActuatorData) -> None:
+        """Triggered when an actuator changes state"""
+        pass
+
+    def actuator_value_changed_handler(ActuatorData) -> None:
+        """Triggered when an actuator changes value, i.e. movement"""
         pass

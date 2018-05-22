@@ -41,44 +41,6 @@ Procedures
         category: Optional[str]
 
 
-    def get_procedures() -> OrderedDict[str, ProcedureData]:
-        """
-        :returns: an OrderedDict name:ProcedureData, each describing a procedure,
-                  such as: realignment, anneal
-
-        # NB we may want nested dictionaries if procedures are divided by component
-        """
-        pass
-
-
-    def get_procedure(name:str) -> ProcedureData:
-        """
-        :returns: The ProcedureData object identified by the given name
-        """
-        pass
-
-
-    def run_procedure(name:str, **kwargs) -> bool:
-        """
-        Runs procedure identified by name with arguments kwargs
-
-        (Errors and progress that occurs is passed asynchronously via the
-         available signalling mechanism.)
-
-        """
-        pass
-
-    def stop_procedure(name:str) -> bool:
-        """
-        Stops a running procedure identified by name
-
-        (Signal emitted if stopped or on timeout waiting for procedure to stop)
-
-        # NB we are assuming that names (like 'Quick_Realign') are unique,
-        #    and that a given procedure cannot run in two parallel processes.
-        """
-        pass
-
     class CmdState(Enum):
         # NB do we need other / different states here?
         UNUSABLE = 0
@@ -130,44 +92,11 @@ Actuators:
         lower_limit         # Lower limit
         allowed_values      # Tuple of allowed values
 
-
-    def get_actuators() -> Dict[str, ActuatorData]:
-        """
-        :returns: A dictionary with all available actuators where the key
-                  is the actuator name and the value the ActuatorData tuple
-        """
-        pass
-
-
-    def get_actuator(name:atr) -> ActuatorData:
-        """
-        :returns: The ActuatorData object identified by the given name
-        """
-        pass
-
-
-    def set_actuator_value(name:str, value:Any) -> bool:
-        """
-        Tries to set the actuator identified by name to value.
-        Setting a disallowed value will raise ValueError, with one exception:
-        if the actuator takes a float value and has a non-empty allowed_values,
-        the value will be set to the nearest value in the list.
-
-        Setting a value of the wrong type will raise TypeError
-
-        (Errors and progress of movement is passed asynchronously
-         via the available signalling mechanism)
-
-        :returns: True if motion was started False otherwise
-        """
-        pass
-
 State/Value enumerations
 ------------------------
 
 .. code:: python
 
-    from typing import *
     from enum import Enum
 
     class ActuatorState(Enum):
@@ -207,43 +136,3 @@ State/Value enumerations
         ACTIVE = 1
         IN = 1
         CLOSED = 1
-
-Signal handlers:
-----------------
-
-    Functions with the following signatures have to be provided by the specific UI Layer in order
-    to handle the various errors, state changes or simply progress messages that are sent by the
-    actions initiated by the functions above. These are the generic signals that can be sent by
-    a procedure or actuator, each of which can have their own specific signals that have to
-    be handled separately (should be documented with the corresponding procedure or actuator)
-
-    +---------------------------+---------------------------------------+
-    | Signal Name               | Handler                               |
-    +===========================+=======================================+
-    | procedureStateChanged     | procedure_state_changed_handler       |
-    +---------------------------+---------------------------------------+
-    | procedureProgress         | procedure_progress_handler            |
-    +---------------------------+---------------------------------------+
-    | actuatorStateChanged      | actuator_state_changed                |
-    +---------------------------+---------------------------------------+
-    | actuatorValueChanged      | actuator_value_changed_handler        |
-    +---------------------------+---------------------------------------+
-
-.. code:: python
-
-    def procedure_state_changed_handler(ProcedureData) -> None:
-        """Triggered when a procedure changes state"""
-        pass
-
-    def procedure_progress_handler(procedure_name:str, value: Any,
-                                   message:str='') -> None:
-        """Handles progress-messages from running procedures"""
-        pass
-
-    def actuator_state_changed_handler(ActuatorData) -> None:
-        """Triggered when an actuator changes state"""
-        pass
-
-    def actuator_value_changed_handler(ActuatorData) -> None:
-        """Triggered when an actuator changes value, i.e. movement"""
-        pass
