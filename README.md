@@ -10,7 +10,7 @@ The functions of the API will be divided into groups which are considered belong
 
 There are two types of functions those that are to be called directly by the client (UI) refereed to as __API functions__ and __signla handlers__ that are called by the underlying signal handling system.
 
-The architecture is of client/server nature which means that some data structures are exchanged between client (UI) and server, its thus important that those data structures are easily serializable.
+The architecture is of client/server nature which means that some data structures are exchanged between client (UI) and server, its thus important that those data structures are easily serializable (to atleast JSON format).
 
 A basic framework that provides access to the underlying control layer and for sending asynchronous data is assumed to exist, if needed. The control layer is accessed through a object called __"beamline"__ the mechanism for sending asynchronous data is referred to as __"async.emit"__.
 
