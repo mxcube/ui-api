@@ -1,84 +1,9 @@
-Its up to the layer utilizing this API to handle any errors that occur during execution 
-and perform the necessary actions, see the example of how it could be done in for instance
-MXCuBE3
-
-**Usage example:**
-
-.. code:: python
-
-    @mxcube.route("/mxcube/api/v0.1/sample_changer/mount", methods=["POST"])
-    def mount_sample_clean_up():
-        try:
-            location = request.get_json()
-            common_ui_api.sample_changer.mount(location)
-        except Exception:
-            return Response(status=409)
-        else:
-            return Response(status=200)
-
-
 Sample changer API
-~~~~~~~~~~~~~~~~~~
-
-**Signal handlers:**
-
-Functions with the following signatures have to be provided by the specific UI Layer in order
-to handle the corresponding signals. These functions could simply be implemented in a file
-called for instance sc_signals.py or just signals.py and be attached automatically to the
-corresponding signal name
-
-+---------------------+---------------------------------+
-| Signal Name         | Handler                         |
-+=====================+=================================+
-| stateChanged        | sc_state_changed_handler        |
-+---------------------+---------------------------------+
-| loadedSampleChanged | sc_loaded_sample_changed_handler|
-+---------------------+---------------------------------+
-| contentsUpdated     | sc_contents_update_handler      |
-+---------------------+---------------------------------+
-| cmdStateChanged     | sc_cmd_state_update_handler     |
-+---------------------+---------------------------------+
-| scError             | sc_error_handler                |
-+---------------------+---------------------------------+
-
-.. code:: python
-
-   def sc_state_changed_handler(old_state:SampleChangerState,
-                                new_state:SampleChangerState) -> None:
-   """
-   Triggered when the sample changer state changes
-   """
-   pass
-   
-   def loaded_sample_changed_handler(sample:Sample) -> None:
-   """
-   Triggered when a sample have been loaded
-   """
-   pass
-   
-
-   def sc_contents_update_handler() -> None:
-   """
-   Triggered when the contents have been updated
-   """
-   pass
+==================
 
 
-   def sc_command_update_handler(state_list, cmd_state, message) -> None:
-   """
-   Triggered when any of the command states have been updated
-   """
-   pass
-   
-   
-   def sc_error_handler(error_code, message) -> None:
-   """
-   Triggered on any error
-   """
-   pass
-
-
-**API Functions**
+API Functions
+-------------
 
 These are the functions that make up the sample changer API
 
@@ -86,7 +11,7 @@ These are the functions that make up the sample changer API
 
     from sample_changer.GenericSampleChanger import (SampleChangerState, Sample)
     from typing import NewType
-    
+
     # Mostly to facilitate documentation (to avoid repetition) but could also
     # be used in actual code.
     #
@@ -141,11 +66,11 @@ These are the functions that make up the sample changer API
     :rtype: List[SampleTuple]
     """
     pass
- 
+
 
     def get_state() -> str:
     """
-    :returns: the sample changer state, one of the strings defined in 
+    :returns: the sample changer state, one of the strings defined in
               SampleChangerState
 
     :rtype: str (GenericSampleChanger.SampleChangerState)
@@ -164,7 +89,7 @@ These are the functions that make up the sample changer API
     def get_sc_contents() -> SampleNode:
     """
     :returns: the hierarchical layout of the sample changer, with containers
-              and samples. 
+              and samples.
     """
     pass
 
@@ -214,91 +139,109 @@ These are the functions that make up the sample changer API
     pass
 
 
-    def get_available_commands() -> List[List]:
-    """
-    Retrieves a List (of Lists)  of sample changer specific commands, The List
-    has the following structure:
-
-    ["Command-Category_1", [
-        ["cmd_1", "DisplayName", "Comment/Help-text"],
-        ...
-        ["cmd_n-1", "DisplayName", "Comment/Help-text"], 
-        ["cmd_n", "DisplayName", "Comment/Help-text"], 
-    ] 
-    ], 
-    ["Command-Category_n-1", [
-        ["cmd_1", "DisplayName", "Comment/Help-text"],
-        ...
-        ["cmd_n-1", "DisplayName", "Comment/Help-text"], 
-        ["cmd_n", "DisplayName", "Comment/Help-text"],
-    ]
-    ], 
-    ["Command-Category_n",  [
-        ...
-    ] 
-    ],  
-
-
-    :Example:
-    cmd_list = [
-    ["Actions",  [
-        ["home", "Home", "Actions"],
-        ["defreeze", "Defreeze gripper", "Actions"],
-        ["reset_sample_number", "Reset sample number", "Actions"],                   
-        ["change_gripper", "Change Gripper", "Actions"],
-        ["abort", "Abort", "Actions"],
-      ]
-    ]
-
-
-    :returns: List, of lists, on the format described above
-    :rtype List:
-    """
-    pass
-
-
-    def get_command_state() -> List[List]:
-    """
-    Returns a list with the currently available commands, which might depend on
-    sample changer state, and a status message:
-
-    [{"cmd_1": True if available else False,
-      "cmd_n": True if available else False,
-      "cmd_n-1": True if available else False},
-     message]
-
-     Where message is a str
-
-
-    :rtype: List
-    """
-    pass
-
-    
     def get_full_state() -> Dict:
     """
     :returns: A dictionary containing the complete state of the sample changer
 
     The returned dict has the following format:
 
-    {'state': GenericSampleChanger.SampleChangerState 
+    {'state': GenericSampleChanger.SampleChangerState
      'loaded_sample': LocationStr
      'contents': SampleNode
-     'cmds': "as returned by get_available_commands",
-     'commands_state': "as returned by get_command_state}",
+     'procedures': "as returned by get_procedures",
      'msg': "user message if any"
     }
 
     :rtype: dict
     """
 
+Specific procedures
+-------------------
 
-    def exec_command(cmd_name: str, *args, **kwargs) -> bool:
-    """
-    Executes the command cmd_name (one of the commands returned by 
-    get_available_commands) with the args *args and **kwargs:
+There will be a number of procedures that are beamline-specific, or that use
+different parameters on different beamlines. These can be handled with the
+get_procedures, get_procedure, run_procedure, and stop_procedure functions
+(see the Procedures section under general for details). Procedures that
+are used in the same way on different beamlines should preferably be promoted
+to be part of the API, possibly with additional, beamline-specific parameters.
 
-    :returns: True on successful execution otherwise False
-    :rtype: bool
-    """
-    
+Possible example procedures are:
+home, abort, defreeze, reset_sample_number, change_gripper,
+
+Signal handling
+---------------
+
+Functions with the following signatures have to be provided by the specific UI Layer in order
+to handle the corresponding signals. These functions could simply be implemented in a file
+called for instance sc_signals.py or just signals.py and be attached automatically to the
+corresponding signal name
+
+    +---------------------+---------------------------------+
+    | Signal Name         | Handler                         |
+    +=====================+=================================+
+    | stateChanged        | sc_state_changed_handler        |
+    +---------------------+---------------------------------+
+    | loadedSampleChanged | sc_loaded_sample_changed_handler|
+    +---------------------+---------------------------------+
+    | contentsUpdated     | sc_contents_update_handler      |
+    +---------------------+---------------------------------+
+    | cmdStateChanged     | sc_cmd_state_update_handler     |
+    +---------------------+---------------------------------+
+    | scError             | sc_error_handler                |
+    +---------------------+---------------------------------+`
+
+.. code:: python
+
+   def sc_state_changed_handler(old_state:SampleChangerState,
+                                new_state:SampleChangerState) -> None:
+   """
+   Triggered when the sample changer state changes
+   """
+   pass
+
+   def loaded_sample_changed_handler(sample:Sample) -> None:
+   """
+   Triggered when a sample have been loaded
+   """
+   pass
+
+
+   def sc_contents_update_handler(sample_node:SampleNode) -> None:
+   """
+   Triggered when sample_node or its contents have been updated.
+   """
+   pass
+
+
+   def sc_procedure_update_handler(procedures:Tuple[str, ,...], message) -> None:
+   """
+   Triggered when the states of one or more procedures have been updated
+
+   Note that get_procedures will get the entire set of procedures and their states
+   """
+   pass
+
+
+   def sc_error_handler(error_code, message) -> None:
+   """
+   Triggered on any error
+   """
+   pass
+
+**Usage example:**
+
+Its up to the layer using this API to handle any errors that occur during execution
+and perform the necessary actions, see the example of how it could be done in for instance
+MXCuBE3
+
+.. code:: python
+
+    @mxcube.route("/mxcube/api/v0.1/sample_changer/mount", methods=["POST"])
+    def mount_sample_clean_up():
+        try:
+            location = request.get_json()
+            common_ui_api.sample_changer.mount(location)
+        except Exception:
+            return Response(status=409)
+        else:
+            return Response(status=200)
