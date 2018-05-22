@@ -1,6 +1,5 @@
 # ui-api
-Repository for specifying the API used between the MXCuBE user interface and its backend
-
+Repository for specifying the API used between the MXCuBE user interface and its backend.
 See [Background information](https://github.com/mxcube/HardwareRepository/issues/139) for more details.
 
 The API consist of a set of functions and provides a "thin layer" for the MXCuBE user interface to access the underlying beamline control layer, today implemented as HardwareObjects.
@@ -15,7 +14,8 @@ The architecture is of client/server nature which means that some data structure
 
 A basic framework that provides access to the underlying control layer and for sending asynchronous data is assumed to exist, if needed. The control layer is accessed through a object called __"beamline"__ the mechanism for sending asynchronous data is referred to as __"async.emit"__.
 
-**Usage example:**
+Usage example:
+--------------
 
 Its up to the layer using this API to handle any errors that occur during execution and perform the necessary actions, see the example of how it could be done in for instance MXCuBE3
 
@@ -30,7 +30,7 @@ Its up to the layer using this API to handle any errors that occur during execut
             return Response(status=200)
 
 
-Example for setting beam size:
+__Example for setting beam size:__
 ```
 def set_beam_size(vertical_size: float, horizontal_size: float) -> None:
 """
