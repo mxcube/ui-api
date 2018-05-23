@@ -8,7 +8,7 @@ The implementation of this specification will be done Python 2.7.x, migration to
 
 The functions of the API will be divided into groups which are considered belonging together and each group will be documented in a separate file. The syntax used for these files is __reStructuredText__ since it integrates well with existing documentation tools used for Python. Each file corresponds to a specific part of the available "namespace" so each file can roughly be considered to become a python file in a concrete implementation. Data structures that are shared across the API are defined in [data_structures.rst](data_structures.rst), otherwise each .rst file corresponds to a category of functionality: [beamline.rst](beamline.rst]), [diffractometer.rst](diffractometer.rst), [lims.rst](lims.rst), [login.rst](login.rst), [processing.rst](processing.rst), [queue.rst](queue.rst), [remote_access.rst](remote_access.rst), [sample_changer.rst](sample_changer.rst), [workflow.rst](workflow.rst).
 
-There are two types of functions those that are to be called directly by the client (UI) refereed to as __API functions__ and __signla handlers__ that are called by the underlying signal handling system.
+There are two types of functions those that are to be called directly by the client (UI) refereed to as __API functions__ and __signal handlers__ that are called by the underlying signal handling system.
 
 The architecture is of client/server nature which means that some data structures are exchanged between client (UI) and server, its thus important that those data structures are easily serializable (to atleast JSON format).
 
