@@ -11,7 +11,7 @@ These are the functions that make up the sample changer API
 
     from typing import NewType
     from sample_changer.GenericSampleChanger import (SampleChangerState, Sample)
-    from dstruct import (ActuatorData, ProcedureData)
+    from data_structures import (ActuatorData, ProcedureData)
 
     # Mostly to facilitate documentation (to avoid repetition) but could also
     # be used in actual code.
@@ -23,154 +23,154 @@ These are the functions that make up the sample changer API
 
 
     class SampleNode(NamedTuple):
-    """
-    Represents a sample in a hierarchical layout that corresponds to the
-    physical representation of the sample changer.
+        """
+        Represents a sample in a hierarchical layout that corresponds to the
+        physical representation of the sample changer.
 
-    Where state is one of the samples given by: SampleChangerState.tostring()
-    """
+        Where state is one of the samples given by: SampleChangerState.tostring()
+        """
         id: str
         name: str
         location: LocationStr
         code: str
         selected: bool
-        lodable: bool
+        loadable: bool
         children: SampleNode
 
 
     def to_sample_node(s: Sample) -> \
         SampleNode[str, str, LocationStr, str, bool, bool, None]:
-    """
-    Example using existing GenericSampleChanger to create a SampleNode
-    """
-    return SampleNode(s.getAddress(),
-                       s.getAddress(), "Sample-%s" % s.getAddress(),
-                       s.getID(),
-                       True,
-                       SampleChangerState.tostring(s.getState())
-                       None)
+        """
+        Example using existing GenericSampleChanger to create a SampleNode
+        """
+        return SampleNode(s.getAddress(),
+                          s.getAddress(), "Sample-%s" % s.getAddress(),
+                          s.getID(),
+                          True,
+                          SampleChangerState.tostring(s.getState()),
+                          None)
 
 
     def get_sample_list() -> List[SampleNode]:
-    """
-    :returns: the sample changer content often refered to as the "sample list"
-    :rtype: List[SampleNode]
-    """
-    pass
+        """
+        :returns: the sample changer content often refered to as the "sample list"
+        :rtype: List[SampleNode]
+        """
+        pass
 
 
     def get_state() -> str:
-    """
-    :returns: the sample changer state, one of the strings defined in
-              SampleChangerState
+        """
+        :returns: the sample changer state, one of the strings defined in
+                  SampleChangerState
 
-    :rtype: str (GenericSampleChanger.SampleChangerState)
-    """
-    pass
+        :rtype: str (GenericSampleChanger.SampleChangerState)
+        """
+        pass
 
 
     def get_current_sample() -> SampleNode:
-    """
-    :returns: the sample that is currently loaded by the sample changer
-    :rtype: SampleNode
-    """
-    pass
+        """
+        :returns: the sample that is currently loaded by the sample changer
+        :rtype: SampleNode
+        """
+        pass
 
 
     def get_sc_contents() -> SampleNode:
-    """
-    :returns: the hierarchical layout of the sample changer, with containers
-              and samples.
-    """
-    pass
+        """
+        :returns: the hierarchical layout of the sample changer, with containers
+                  and samples.
+        """
+        pass
 
 
     def select_location(location:LoctionStr) -> bool:
-    """
-    Selects the sample at the given location
+        """
+        Selects the sample at the given location
 
-    :param LocationStr location: location
-    :returns: True if location was selected otherwise False
-    :rtype: bool
-    """
-    pass
+        :param LocationStr location: location
+        :returns: True if location was selected otherwise False
+        :rtype: bool
+        """
+        pass
 
 
     def scan_location(location:LocationStr) -> bool:
-    """
-    Scan the given location for contents
+        """
+        Scan the given location for contents
 
-    :param LocationStr location: location
-    :returns: True if any new content found otherwise False
-    :rtype: bool
-    """
-    pass
+        :param LocationStr location: location
+        :returns: True if any new content found otherwise False
+        :rtype: bool
+        """
+        pass
 
 
     def mount_sample(location:LocationStr) -> bool:
-    """
-    Mounts sample from location
+        """
+        Mounts sample from location
 
-    :param LocationStr location: location
-    :returns: True if mount successful otherwise False
-    :rtype: bool
-    """
-    pass
+        :param LocationStr location: location
+        :returns: True if mount successful otherwise False
+        :rtype: bool
+        """
+        pass
 
 
     def unmount_current_sample(location:LocationStr=None) -> bool:
-    """
-    Un-mounts mounted sample to location, un mounts the sample
-    to where it was last mounted from if nothing is passed
+        """
+        Un-mounts mounted sample to location, un mounts the sample
+        to where it was last mounted from if nothing is passed
 
-    :param LocationStr location: location
-    :returns: True if un-mount successful otherwise False
-    :rtype: bool
-    """
-    pass
+        :param LocationStr location: location
+        :returns: True if un-mount successful otherwise False
+        :rtype: bool
+        """
+        pass
 
 
     def get_full_state() -> Dict:
-    """
-    :returns: A dictionary containing the complete state of the sample changer
+        """
+        :returns: A dictionary containing the complete state of the sample changer
 
-    The returned dict has the following format:
+        The returned dict has the following format:
 
-    {'state': GenericSampleChanger.SampleChangerState
-     'loaded_sample': LocationStr
-     'contents': SampleNode
-     'procedures': "as returned by get_available_commands"
-     'msg': "user message if any"
-    }
+        {'state': GenericSampleChanger.SampleChangerState
+         'loaded_sample': LocationStr
+         'contents': SampleNode
+         'procedures': "as returned by get_available_commands"
+         'msg': "user message if any"
+        }
 
-    :rtype: dict
-    """
-    pass
+        :rtype: dict
+        """
+        pass
 
 
     def get_available_commands() -> OrderedDict[str, ProcedureData]:
-    """
-    There is a number of procedures that are beamline-specific, or that use
-    different parameters on different beamlines.
+        """
+        There is a number of procedures that are beamline-specific, or that use
+        different parameters on different beamlines.
 
-    Possible example procedures are:
-    home, abort, defreeze, reset_sample_number, change_gripper,
+        Possible example procedures are:
+        home, abort, defreeze, reset_sample_number, change_gripper,
 
-    :returns: OrderedDict[str, ProcedureData], of sample changer specific
-              commands
-    """
-    pass
+        :returns: OrderedDict[str, ProcedureData], of sample changer specific
+                  commands
+        """
+        pass
 
 
     def exec_command(name:str, **kargs) -> bool:
-    """
-    Executes the command cmd_name (one of the commands returned by
-    get_available_commands) with the args *args and **kwargs:
+        """
+        Executes the command cmd_name (one of the commands returned by
+        get_available_commands) with the args *args and **kwargs:
 
-    :returns: True on successful execution otherwise False
-    :rtype: bool
-    """
-    pass
+        :returns: True on successful execution otherwise False
+        :rtype: bool
+        """
+        pass
 
 
 Signal handling
@@ -199,37 +199,37 @@ and be attached automatically to the corresponding signal name
 
    def sc_state_changed_handler(old_state:SampleChangerState,
                                 new_state:SampleChangerState) -> None:
-   """
-   Triggered when the sample changer state changes
-   """
-   pass
+       """
+       Triggered when the sample changer state changes
+       """
+       pass
 
    def loaded_sample_changed_handler(sample:Sample) -> None:
-   """
-   Triggered when a sample have been loaded
-   """
-   pass
+       """
+       Triggered when a sample have been loaded
+       """
+       pass
 
 
    def sc_contents_update_handler(sample_node:SampleNode) -> None:
-   """
-   Triggered when sample_node or its contents have been updated.
-   """
-   pass
+       """
+       Triggered when sample_node or its contents have been updated.
+       """
+       pass
 
 
    def sc_procedure_update_handler(procedures:Tuple[str, ,...], message) -> None:
-   """
-   Triggered when the states of one or more procedures have been updated
+       """
+       Triggered when the states of one or more procedures have been updated
 
-   Note that get_procedures will get the entire set of procedures and
-   their states
-   """
-   pass
+       Note that get_procedures will get the entire set of procedures and
+       their states
+       """
+       pass
 
 
    def sc_error_handler(error_code, message) -> None:
-   """
-   Triggered on any error
-   """
-   pass
+       """
+       Triggered on any error
+       """
+       pass
