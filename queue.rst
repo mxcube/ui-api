@@ -11,6 +11,7 @@ NB the dataclasses are Python 3.7 (see manual), but backported to at least 3.6
 
 They are the best way to specify data structures, because they are typed,
 compact to write and (unlike NamedTuple) support subtyping.
+They have a todict function for serialisation.
 The same functionality could be done (more laboriously) with normal classes
 or with multiple (non-inheriting) NamedTuples.
 They are used as a good way of specifying functionality, without prejudice
@@ -23,13 +24,13 @@ to the implementation we shall eventually decide on.
     """
     State of queue
     """
-    current_sample: SampleTaskNode
+    current_sample: SampleTask
     centring_method: mxcube.CENTRING_METHOD
-    auto_mount_next: SampleTaskNode
+    auto_mount_next: SampleTask
     auto_add_diff_plan: bool
     num_snapshots: int
     group_folder: str
-    queue: OrderedDict[LocationStr:SampleTaskNode]
+    queue: OrderedDict[LocationStr:SampleTask]
     sample_list: ??? # Is this necessary when you have the queue OrderedDict?
     queue_status: QueueState
 
@@ -53,7 +54,7 @@ to the implementation we shall eventually decide on.
         parameters: field(default_factory=dict)
 
     @dataclass
-    class CentringNode(TaskNode):
+    class CentringTask(TaskNode):
         """
         Data for Centring node
 
@@ -66,7 +67,7 @@ to the implementation we shall eventually decide on.
         label: typing.ClassVar = 'Centring'
 
     @dataclass
-    class CharacterisationNode(TaskNode):
+    class CharacterisationTask(TaskNode):
         """
         Data for Characterisation node
         """
@@ -75,10 +76,10 @@ to the implementation we shall eventually decide on.
         label: typing.ClassVar = 'Characterisation'
 
         lims_result_data: dict = None
-        diffraction_plan: DataCollectionNode = None
+        diffraction_plan: DataCollectionTask = None
 
     @dataclass
-    class DataCollectionNode(TaskNode):
+    class DataCollectionTask(TaskNode):
         """
         Data for Data Collection node
         """
@@ -89,7 +90,7 @@ to the implementation we shall eventually decide on.
         lims_result_data: dict = None
 
     @dataclass
-    class EnergyScanNode(TaskNode):
+    class EnergyScanTask(TaskNode):
         """
         Data for EnergyScan node
         """
@@ -98,7 +99,7 @@ to the implementation we shall eventually decide on.
         label: typing.ClassVar = 'Energy Scan'
 
     @dataclass
-    class InterleavedNode(TaskNode):
+    class InterleavedTask(TaskNode):
         """
         Data for Interleaved node
         """
@@ -110,7 +111,7 @@ to the implementation we shall eventually decide on.
         tasks: list = field(default_factory=list)
 
       @dataclass
-      class MeshScanNode(TaskNode):
+      class MeshScanTask(TaskNode):
         """
         Data for Data Collection node
         """
@@ -121,7 +122,7 @@ to the implementation we shall eventually decide on.
         lims_result_data: dict = None
 
     @dataclass
-    class SampleNode(TaskNode):
+    class SampleTask(TaskNode):
         """
         Data for Sample node
         """
@@ -138,7 +139,7 @@ to the implementation we shall eventually decide on.
         # NB default_prefix, default_sub_dir, and others if desired are stored in parameters
 
     @dataclass
-    class WorkflowNode(TaskNode):
+    class WorkflowTask(TaskNode):
         """
         Data for Workflow node
         """
@@ -149,7 +150,7 @@ to the implementation we shall eventually decide on.
         lims_result_data: dict = None
 
     @dataclass
-    class XRFScanNode(TaskNode):
+    class XRFScanTask(TaskNode):
         """
         Data for XRFScan node
         """
@@ -279,12 +280,12 @@ specific tasks on the queue.
         """
         pass
 
-    def get_queue() -> OrderedDict[LocationStr:SampleTaskNode]:
+    def get_queue() -> OrderedDict[LocationStr:SampleTask]:
         """
         Get Ordered dictionary representation of Queue
 
-        :returns: Ordered dict of sample_location:SampleTaskNode
-        :rtype OrderedDict[LocationStr:SampleTaskNode]:
+        :returns: Ordered dict of sample_location:SampleTask
+        :rtype OrderedDict[LocationStr:SampleTask]:
         """
         pass
 

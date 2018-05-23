@@ -9,11 +9,9 @@ to one particular instrument.
 List of Actuators:
 ------------------
 
-Below a list of actuators that, from an instrumentation perspective, are
-considered to belong to the beamline as a whole. Such actuators include, but
-are not limited to, actuators that have an effect on properties directly
-associated with the beamline. Such properties are for instance resolution,
-energy and resolution.
+Below a list of all known actuators, including those that might logically
+be associated with the SampleChanger of Diffractometer, as well as more
+generally with the beamline.
 
 
 **Actuators - Type float:**
@@ -106,7 +104,7 @@ API Functions
 
 .. code:: python
 
-    from dstruct import (ActuatorData, ProcedureData)
+    from data_structures import (ActuatorData, ProcedureData)
 
 
     def get_procedures() -> OrderedDict[str, ProcedureData]:
