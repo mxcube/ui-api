@@ -33,11 +33,11 @@ Its up to the layer using this API to handle any errors that occur during execut
 __Example for setting beam size:__
 ```
 def set_beam_size(vertical_size: float, horizontal_size: float) -> None:
-"""
-Sets the beam size.
+    """
+    Sets the beam size.
 
-:param float vertical_size: The vertical beam size in microns
-:param float horizontal_size: The horizontal beam size in microns
-:returns: None
+    :param float vertical_size: The vertical beam size in microns
+    :param float horizontal_size: The horizontal beam size in microns
+    :returns: None
 """
 ```
