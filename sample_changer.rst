@@ -204,7 +204,7 @@ and be attached automatically to the corresponding signal name
        """
        pass
 
-   def loaded_sample_changed_handler(sample:Sample) -> None:
+   def sc_loaded_sample_changed_handler(sample:Sample) -> None:
        """
        Triggered when a sample have been loaded
        """
