@@ -45,13 +45,13 @@ to the implementation we shall eventually decide on.
         type: typing.ClassVar = 'Task'
         label: typing.ClassVar = 'Task'
 
-        sample_ID: str
+        sample_location: str
         node_ID: int = None
         parent_node_ID: int = None  # NB parent need not be a Sample, can be Interleave
-        task_index: int = None
         checked: bool = False
         state: int = READY
         parameters: field(default_factory=dict)
+        task_index: int = field(init=False, default=None)
 
     @dataclass
     class CentringTask(TaskNode):
@@ -209,21 +209,19 @@ specific tasks on the queue.
 
 
     # NB do we need a similar or replacement function that takes a node_id as input?
-    def execute_entry_with_id(sample_location:LocationStr, task_index:int):
+    def execute_entry_with_id(node_id:int):
         """
-        Execute the entry at position (sample_location, task index) in queue
+        Execute the entry with node_id in queue
 
-        :param LocationStr sample_location: sample_location
-        :param int task_index: task index of task within sample at sample_location
+        :param int node_id: node_id of task to execute
         """
         pass
 
-    # NB do we need a similar or replacement function that takes a list of node_ids as input?
-    def delete_items(item_positions:List[Tuple[int, int]]):
+    def delete_items(item_ids:List[int]):
         """
-        Delete items in item_positions from queue
+        Delete items with given ids from queue
 
-        :param List[Tuple[int, int]] item_positions: lit of (parent_node_id, task_index) tuples
+        :param List[int] item_ids: lit of node_id
 
         """
         pass
@@ -243,23 +241,23 @@ specific tasks on the queue.
         """
         pass
 
-    def move_task_item(sample_location:LocationStr, from_task_index:int, to_task_index:int):
+    def move_task_item(node_id:int, from_task_index:int, to_task_index:int):
         """
-        Move Sample task item in execution order from from_task_index to to_task_index
+        Move task item of containing node with node_id in execution order from from_task_index to to_task_index
 
-        :param LocationStr sample_location: sample_location
+        :param int node_id: containing node
         :param int from_task_index: index of task to move
         :param int to_task_index: position to move task to
         """
         pass
 
-    def swap_task_item(sample_location:LocationStr, from_task_index:int, to_task_index:int):
+    def swap_task_item(node_id:int, from_task_index:int, to_task_index:int):
         """
-        Swap Sample task item in execution order from from_task_index to to_task_index
+        Swap task item of containing node with node_id in execution order between from_task_index to to_task_index
 
-        :param LocationStr sample_location: sample_location
-        :param int from_task_index: index of task to swap
-        :param int to_task_index: position to swap task to
+        :param int node_id: containing node
+        :param int from_task_index: index of task to move
+        :param int to_task_index: position to move task to
         """
         pass
 
@@ -282,12 +280,27 @@ specific tasks on the queue.
 
     def get_queue() -> OrderedDict[LocationStr:SampleTask]:
         """
-        Get Ordered dictionary representation of Queue
+        Get Ordered dictionary representation of Queue, by sample location 
 
         :returns: Ordered dict of sample_location:SampleTask
         :rtype OrderedDict[LocationStr:SampleTask]:
         """
         pass
+
+    def get_queue_by_id() -> OrderedDict[int:SampleTask]:
+        """
+        Get Ordered dictionary representation of Queue, by node id
+
+        :returns: Ordered dict of node_id:SampleTask
+        :rtype OrderedDict[int:SampleTask]:
+        """
+        pass
+        
+    def get_task_by_id(node_id:int) -> Optional[TaskNode]:
+        """
+        Get Task record corredponding to node_id.
+        Equivalent to get_queue_by_id().get(node_id)
+        """
 
     def add_nodes(tasks: List[TaskNode]):
         """

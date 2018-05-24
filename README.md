@@ -39,5 +39,5 @@ def set_beam_size(vertical_size: float, horizontal_size: float) -> None:
     :param float vertical_size: The vertical beam size in microns
     :param float horizontal_size: The horizontal beam size in microns
     :returns: None
-"""
+    """
 ```
