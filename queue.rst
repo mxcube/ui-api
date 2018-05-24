@@ -426,8 +426,6 @@ specific tasks on the queue.
     def get_default_centring_parameters() -> dict:
         pass
 
-    def get_default_mesh_scan_parameters() -> dict:
-        pass
 
     # Functions to update task (queue_model_object) parameters
     #
@@ -436,7 +434,7 @@ specific tasks on the queue.
     # **kwargs is to support beamline-specific parameters
     def update_centring_parameters(node_id, ..., **kwargs)
     def update_characterisation_parameters(node_id, ..., **kwargs)
-    def update_datacollection_parameters(node_id, ..., **kwargs)
+    def update_data_collection_parameters(node_id, ..., **kwargs)
     def update_energy_scan_parameters(node_id, ..., **kwargs)
     def update_gphl_workflow_parameters(node_id, ..., **kwargs)
     def update_mesh_scan_parameters(node_id, ..., **kwargs)
