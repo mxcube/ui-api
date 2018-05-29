@@ -1,9 +1,9 @@
 Beamline API
 ============
 
-Functionality that are considered to belong to the beamlone as a whole,
-incorporating several different instruments or that does not necessarily belong
-to one particular instrument.
+Functionality that are considered to belong to the beamline as a whole,
+incorporating several different instruments or that does not necessarily
+belong to one particular instrument.
 
 
 List of Actuators:
@@ -16,7 +16,7 @@ generally with the beamline.
 
 **Actuators - Type float:**
 
-    *Centring motors*
+    *Diffractometer motors*
 
         omega, kappa, kappa_phi, alignment_ver, alignment_hor, alignment_depth,
         centring_vertical, centring_horizontal, centring_depth, focus
@@ -47,10 +47,6 @@ generally with the beamline.
 
         aperture, slits
 
-        #
-        # Question: How exactly would these work ?
-        #
-
         These are included only to standardize the names. The specific
         beam-defining motors are likely to vary between beamlines,
         and many beamlines will not support these in the user interface,
@@ -65,12 +61,6 @@ generally with the beamline.
 
         These must all have a allowed_values or enum
 
-        # NB we should standardise the vocabularies as well as the names.
-             Enums?? How should we deal with beamline-specific sets?
-
-        # The underlaying "object" that provides the functionality could provide
-        # a suitable enum to go with the object ?
-
 
 **Actuators - Type TwoState**
 
@@ -79,13 +69,6 @@ generally with the beamline.
     These are all two-state actuators. Their value will be of type
     TwoStateValue. Their state is set to ActuatorState, though one could
     limit it to a subset: NOTINITIALIZED, UNUSABLE, READY, MOVING, FROZEN
-
-    # NB If e.g. a beamstop has multiple positions, how should we treat it?
-         It is open whether multistate objects (n> 2) should be handled similarly
-         or should be done as TYP==str?
-
-    # A beamstop is traditionally in or out, if it has more states it have to be
-    # of another type
 
 
 **Immovable actuators**
