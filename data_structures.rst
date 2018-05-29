@@ -9,7 +9,10 @@ Procedures
 .. code:: python
 
     """
-    Data structure that describes a procedure
+    Describes "generic" beamline procedures, Some procedures and their
+    parameters will be part of the interface, but individual beamlines
+    can add their own procedures, as well as additional parameters
+    (with defaults) to existing ones.
     """
 
     from typing import *
@@ -69,7 +72,14 @@ Actuators:
         the same code and machinery on different beamlines, where things are
         implemented in different ways.
 
-        Setting a disallowed value should throw ValueError.
+        upper_limit and lower_limit are given separately to make it easier
+        to support the pair-of-floats type.
+
+        allowed_values, if not empty, gives the allowed values.
+        For type float a set_value must default to the closest value in
+        allowed_values.
+
+        In all other cases setting a disallowed value should throw ValueError.
         """
 
         name:str            # A globally unique name that identifies the actuator
