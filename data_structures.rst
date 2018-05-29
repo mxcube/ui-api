@@ -30,6 +30,7 @@ Procedures
                   for UI, e.g. 'Action', 'Query', ...  Optional
         """
 
+        # We are assuming that only one instance of a command can run at any time
         name: str
         state: CmdState
         kwargs: OrderedDict[str, Any]
