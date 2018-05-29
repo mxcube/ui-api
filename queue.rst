@@ -162,9 +162,8 @@ to the implementation we shall eventually decide on.
 API Functions
 -------------
 
-These are the functions that make up the queue API,
-including the task-specific functions to put
-specific tasks on the queue.
+These are the functions that make up the queue API, including the task-specific
+functions to put specific tasks on the queue.
 
 # Queue administration functions
 
@@ -172,32 +171,31 @@ specific tasks on the queue.
 
     def start():
         """
-        Start the queue running
-        """
-        pass
-
-    def abort():
-        """
-        Abort the queue
+        Start the queue
         """
         pass
 
     def stop():
         """
-        If a task is running, abort the task and pause the queue
-        If no task is running, abort the queue
+        Stops the queue, finishes the current task before stopping if necassary
+        """
+        pass
+
+    def stop_current_task():
+        """
+        Stops the current task and pauses the queue
         """
         pass
 
     def pause():
         """
-        Pause the queue
+        Pause queue execution
         """
         pass
 
-    def unpause():
+    def resume():
         """
-        Unpause the queue
+        Resume queue execution
         """
         pass
 
@@ -207,8 +205,6 @@ specific tasks on the queue.
         """
         pass
 
-
-    # NB do we need a similar or replacement function that takes a node_id as input?
     def execute_entry_with_id(node_id:int):
         """
         Execute the entry with node_id in queue
@@ -243,7 +239,8 @@ specific tasks on the queue.
 
     def move_task_item(node_id:int, from_task_index:int, to_task_index:int):
         """
-        Move task item of containing node with node_id in execution order from from_task_index to to_task_index
+        Move task item of containing node with node_id in execution order from
+        from_task_index to to_task_index
 
         :param int node_id: containing node
         :param int from_task_index: index of task to move
@@ -253,13 +250,15 @@ specific tasks on the queue.
 
     def swap_task_item(node_id:int, from_task_index:int, to_task_index:int):
         """
-        Swap task item of containing node with node_id in execution order between from_task_index to to_task_index
+        Swap task item of containing node with node_id in execution order
+        between from_task_index to to_task_index
 
         :param int node_id: containing node
         :param int from_task_index: index of task to move
         :param int to_task_index: position to move task to
         """
         pass
+
 
     def set_sample_order(order:List[LocationStr]):
         """
@@ -392,7 +391,7 @@ specific tasks on the queue.
 
     def set_queue_tasks(tasks: List[TaskNode]):
         """
-        Make new queue and call add_nodes(tasks) on it
+        Create a new queue and call add_nodes(tasks) on it
 
         :param  List[TaskNode] tasks: list of TaskNode
         """
@@ -511,8 +510,3 @@ specific tasks on the queue.
         :param LocationStr sample_location: location of queue sample to create plan for
         """
         pass
-
-    def serialize
-        """
-        UNNECESSARY: seems to be an alias for get_queue
-        """
