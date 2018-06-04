@@ -5,8 +5,6 @@ Sample changer API
 API Functions
 -------------
 
-These are the functions that make up the sample changer API
-
 .. code:: python
 
     from typing import NewType

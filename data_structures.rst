@@ -1,7 +1,7 @@
 General API
 ===========
 
-  Functions and classes used generally across the interface.
+  Functions and classes used across the interface.
 
 Procedures
 ----------
@@ -9,10 +9,10 @@ Procedures
 .. code:: python
 
     """
-    This code describes "generic" beamline procedures.
-    Some procedures and their parameters will be part of the interface,
-    but individual beamlines can add their own procedures, as well as
-    additional parameters (with defaults) to existing ones.
+    Describes "generic" beamline procedures, Some procedures and their
+    parameters will be part of the interface, but individual beamlines
+    can add their own procedures, as well as additional parameters
+    (with defaults) to existing ones.
     """
 
     from typing import *
@@ -20,19 +20,18 @@ Procedures
 
     class ProcedureData(NamedTuple):
         """
-
-        # NB TODO awaiting clarification on args / kwargs
-
         name: the string identifying the command, i.e. 'QUICK_REALIGN'
         state: CmdState
         kwargs: OrderdDict[str:Any] of arguments with their defaults
         display_name: the name to display in the user interface e.g. "Quick Realign"
         tool_tip: the tool tip
         messages: any initial messages to display
-        category: Classification of procedures into types, for UI, e.g. 'Action', 'Query', ...  Optional
+        category: Classification of procedures into types,
+                  for UI, e.g. 'Action', 'Query', ...  Optional
         """
 
-        name: str   # NB This assumes that only one instance of a command can run at any time
+        # We are assuming that only one instance of a command can run at any time
+        name: str
         state: CmdState
         kwargs: OrderedDict[str, Any]
         display_name: Optional[str] # defaults to name
@@ -42,7 +41,6 @@ Procedures
 
 
     class CmdState(Enum):
-        # NB do we need other / different states here?
         UNUSABLE = 0
         READY = 1
         RUNNING = 2
@@ -53,10 +51,10 @@ Actuators:
 .. code:: python
 
     """
-    Describes a generic actuator. This can include proper actuators (IN/OUT),
-    movers (e.g. alignment motors), settable values (e.g. wavelength, energy),
-    and in some cases values that are not settable (on a particular beamline)
-    such as machine_current, fill_mode, or energy (on a non-tunable beamline)
+    Describes an actuator. This can include IN/OUT actuator, continous motors
+    (e.g. alignment motors), settable values (e.g. wavelength, energy), and
+    in some cases values that are not settable such as machine_current, fill_mode,
+    or energy (on a non-tunable beamline)
     """
 
     from typing import *
@@ -75,13 +73,14 @@ Actuators:
         the same code and machinery on different beamlines, where things are
         implemented in different ways.
 
-        # NB upper_limit and lower_limit are given separately to make it easier
-        #    to support the pair-of-floats type.
+        upper_limit and lower_limit are given separately to make it easier
+        to support the pair-of-floats type.
 
-        # NB allowed_values, if not empty, gives the allowed values.
-        #    For type float a set_value must default to the closest value in
-        #    the allowed_values.
-        # In all other cases setting a disallowed value should throw ValueError.
+        allowed_values, if not empty, gives the allowed values.
+        For type float a set_value must default to the closest value in
+        allowed_values.
+
+        In all other cases setting a disallowed value should throw ValueError.
         """
 
         name:str            # A globally unique name that identifies the actuator
