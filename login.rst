@@ -66,3 +66,12 @@ API Functions
         """
         """
         pass
+
+    def set_current_proposal(str:code, str:number):
+        """
+        Sets the current proposal to the one with code <code>
+        and number <number>
+
+        :param str code: Proposal code
+        :param str number: Proposal number
+        """
