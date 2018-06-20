@@ -47,16 +47,13 @@ API Functions
         """
         pass
 
-
-    def get_proposal_by_username(str:username) -> LIMSProposal:
+    def get_proposal_by_username(str:username) -> List[LIMSProposal]:
         """
         :param str username: username
-        :returns: The proposal belonging to username
-        :rtype: LIMSProposal
+        :returns: The list proposals belonging to username
+        :rtype: List[LIMSProposal]
         """
         pass
-
-
 
     def get_proposal(str:code, str:number) -> LIMSProposal:
         """
@@ -67,8 +64,6 @@ API Functions
         :rtype: LIMSProposal
         """
         pass
-
-
    
     def get_local_contact(str: session_id) -> LIMSPerson:
         """
@@ -77,14 +72,12 @@ API Functions
         """
         pass
 
-
     def get_session(str: proposal_id) -> LIMSSession:
         """
         :param str proposal_id: proposal id
         :returns: The current session, if any, for proposal with id <proposal_id>
         """
         pass
-
 
     def get_sample_list(str: session_id) > List[LimsSample]:
         """
@@ -94,7 +87,6 @@ API Functions
         """
         pass
 
-
     def get_sample(str: sample_id) -> LimsSample:
         """
         :param str sample_id: 
@@ -102,7 +94,6 @@ API Functions
         :rtype: LimsSample
         """
         pass
-
 
     def get_task_url(str: task_id) -> str:
         """
@@ -112,7 +103,6 @@ API Functions
         """
         pass
 
-
     def get_sample_url(str: sample_id) -> str:
         """
         :param str sample_id: sample id
@@ -121,7 +111,6 @@ API Functions
         """
         pass
 
-
     def get_thumbnail(str: image_id) -> (str:name, Bytes: data):
         """
         :param str task_id: image_id
@@ -129,7 +118,6 @@ API Functions
         :rtype: Tuple[str, Bytes]
         """
         pass
-
 
     def get_data_collection_list(str: proposal_id, str:session_id) -> List[DataCollectionTask]:
         """
@@ -140,7 +128,6 @@ API Functions
         """
         pass
 
-
     def get_data_collection(str: datacollection_id) -> DataCollectionTask:
         """
         :param str datacollection_id: datacollection id
@@ -148,7 +135,6 @@ API Functions
         :rtype: DataCollectionTask
         """
         pass
-
 
     def get_quality_indicator_plot(str: task_id) -> (str:name, Bytes: data):
         """
