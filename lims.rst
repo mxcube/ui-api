@@ -38,15 +38,6 @@ API Functions
 
     from queue import DataCollectionTask
 
-    def ping() -> bool:
-        """
-        Check if the LIMS server is responding
-
-        :returns: True if responding False otherwise
-        :rtype: bool
-        """
-        pass
-
     def get_proposal_by_username(str:username) -> List[LIMSProposal]:
         """
         :param str username: username
