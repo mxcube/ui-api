@@ -33,8 +33,7 @@ class SessionInfo():
     synchrotron_name: str
     beamline_name: str
     login_type: LoginType
-    login_result: 
-    loginRes: LoginResult
+    login_result: LoginResult
     proposal: LimsProposal
     session: LimsSession
     local_contact: LimsPerson
@@ -69,7 +68,7 @@ API Functions
 
     def set_current_proposal(str:code, str:number):
         """
-        Sets the current proposal to the one with code <code>
+        Sets the current proposal to the proposal with code <code>
         and number <number>
 
         :param str code: Proposal code
